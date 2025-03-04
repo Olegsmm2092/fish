@@ -1,0 +1,29 @@
+# Basic scientific and numerical computing
+numpy
+scipy
+
+# Design patterns implementation
+python-patterns
+
+# Advanced string manipulation
+regex
+
+# Data validation and type checking
+pydantic
+
+# Testing framework
+pytest
+
+# Optional but recommended for data structures and analysis
+pandas
+
+# Type hinting support
+mypy
+typing-extensions
+
+# Linting and code quality
+pylint
+flake8
+
+# Documentation
+Sphinx
