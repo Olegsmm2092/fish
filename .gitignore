@@ -1,3 +1,5 @@
+.venv/
+.venv_new/
 __pycache__/
 *.pyc
 venv/
@@ -15,5 +17,3 @@ tools/*
 arh.rar
 *.rar
 
-.venv_new/
-.venv/
