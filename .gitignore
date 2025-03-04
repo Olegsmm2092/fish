@@ -1,2 +1,19 @@
-.venv_new/*
-./venv/*
+__pycache__/
+*.pyc
+venv/
+Untitle.ipynb
+steps/*
+edits/*
+git/*
+img/*
+doc/*
+src/test*
+src/test*.ipynb
+tools/*
+
+# backUp of main arh before merged with abc model
+arh.rar
+*.rar
+
+.venv_new/
+.venv/
