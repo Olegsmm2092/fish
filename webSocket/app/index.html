@@ -3,15 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Websockets</title>
+    <title>WebSockets Chat</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="app.js"></script>
 </head>
 <body>
-    <form >
-        <input type="text" placeholder="Your message">
-        <button type="submit">Send</button>
-    </form>
-    <ul></ul>
+    <div class="container">
+        <h1>WebSocket Chat</h1>
+        <form>
+            <input type="text" placeholder="Your message" autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+        <ul class="messages"></ul>
+    </div>
 </body>
 </html>
