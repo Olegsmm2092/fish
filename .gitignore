@@ -17,3 +17,29 @@ tools/*
 arh.rar
 *.rar
 
+# Node Modules
+webSocket/server/node_modules/
+
+# Package Lock Files
+webSocket/server/package-lock.json
+webSocket/server/node_modules/.package-lock.json
+
+# Temporary Files
+webSocket/server/.index.js.swp
+
+# OS generated files
+.DS_Store
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Editor specific files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
