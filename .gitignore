@@ -16,6 +16,7 @@ tools/*
 # backUp of main arh before merged with abc model
 arh.rar
 *.rar
+webSocket.rar
 
 # Node Modules
 webSocket/server/node_modules/
