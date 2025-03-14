@@ -20,6 +20,8 @@ AdapterPattern/.DS_Store
 AdapterPattern/server/public
 AdapterPattern/vite.config.ts.*
 *.tar.gz
+AdapterPattern/.replit
+AdapterPattern/.breakpoints
 
 # backUp of main arh before merged with abc model
 arh.rar
