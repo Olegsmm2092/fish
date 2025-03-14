@@ -12,13 +12,15 @@ class Car:
         print(f"car {self.name}")
 
 class Car1(Car):
-    def __init__.super('car1')
+    def __init__(self):
+        super.__init__('car1')
 
     def assemble(self):
         print('Assembled modification for car1')
 
 class Car2(Car):
-   def __init__.super('car2')
+    def __init__(self):
+        super.__init__('car2')
 
    def assemble(self):
        print('Assembled modification for car2')

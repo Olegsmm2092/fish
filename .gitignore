@@ -13,6 +13,14 @@ src/test*
 src/test*.ipynb
 tools/*
 
+# AdapterPattern Files
+AdapterPattern/node_modules
+AdapterPattern/dist
+AdapterPattern/.DS_Store
+AdapterPattern/server/public
+AdapterPattern/vite.config.ts.*
+*.tar.gz
+
 # backUp of main arh before merged with abc model
 arh.rar
 *.rar

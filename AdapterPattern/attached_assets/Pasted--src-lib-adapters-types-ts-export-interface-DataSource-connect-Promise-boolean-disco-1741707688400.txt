@@ -1,0 +1,277 @@
+// src/lib/adapters/types.ts
+export interface DataSource {
+  connect(): Promise<boolean>;
+  disconnect(): Promise<boolean>;
+  isConnected(): boolean;
+}
+
+export interface USBInterface extends DataSource {
+  sendData(data: string): Promise<string>;
+  receiveData(): Promise<string>;
+}
+
+export interface HDMIInterface extends DataSource {
+  displayData(data: string): Promise<boolean>;
+  getDisplayStatus(): Promise<{ resolution: string; refresh: number }>;
+}
+
+// src/lib/adapters/usb.service.ts
+import { USBInterface } from './types';
+
+export class USBService implements USBInterface {
+  private connected: boolean = false;
+
+  async connect(): Promise<boolean> {
+    // Simulate USB connection
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.connected = true;
+        resolve(true);
+      }, 500);
+    });
+  }
+
+  async disconnect(): Promise<boolean> {
+    this.connected = false;
+    return true;
+  }
+
+  isConnected(): boolean {
+    return this.connected;
+  }
+
+  async sendData(data: string): Promise<string> {
+    if (!this.connected) {
+      throw new Error('USB not connected');
+    }
+    
+    // Simulate data sending
+    return `USB_PROCESSED:${data}`;
+  }
+
+  async receiveData(): Promise<string> {
+    if (!this.connected) {
+      throw new Error('USB not connected');
+    }
+    
+    return 'USB_DATA_SAMPLE';
+  }
+}
+
+// src/lib/adapters/hdmi.service.ts
+import { HDMIInterface } from './types';
+
+export class HDMIService implements HDMIInterface {
+  private connected: boolean = false;
+  private resolution: string = '1080p';
+  private refreshRate: number = 60;
+
+  async connect(): Promise<boolean> {
+    // Simulate HDMI connection
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        this.connected = true;
+        resolve(true);
+      }, 700);
+    });
+  }
+
+  async disconnect(): Promise<boolean> {
+    this.connected = false;
+    return true;
+  }
+
+  isConnected(): boolean {
+    return this.connected;
+  }
+
+  async displayData(data: string): Promise<boolean> {
+    if (!this.connected) {
+      throw new Error('HDMI not connected');
+    }
+    
+    // Simulate displaying data
+    console.log(`Displaying on HDMI: ${data}`);
+    return true;
+  }
+
+  async getDisplayStatus(): Promise<{ resolution: string; refresh: number }> {
+    if (!this.connected) {
+      throw new Error('HDMI not connected');
+    }
+    
+    return {
+      resolution: this.resolution,
+      refresh: this.refreshRate
+    };
+  }
+}
+
+// src/lib/adapters/device-adapter.service.ts
+import { USBService } from './usb.service';
+import { HDMIService } from './hdmi.service';
+import { logger } from '@/lib/logger';
+
+export class DeviceAdapterService {
+  private usbService: USBService;
+  private hdmiService: HDMIService;
+
+  constructor() {
+    this.usbService = new USBService();
+    this.hdmiService = new HDMIService();
+  }
+
+  async initializeDevices(): Promise<{ usb: boolean; hdmi: boolean }> {
+    try {
+      const [usbConnected, hdmiConnected] = await Promise.all([
+        this.usbService.connect(),
+        this.hdmiService.connect()
+      ]);
+      
+      logger.info('All devices initialized successfully');
+      return { usb: usbConnected, hdmi: hdmiConnected };
+    } catch (error) {
+      logger.error('Device initialization failed', { error });
+      throw new Error('Failed to initialize devices');
+    }
+  }
+
+  async disconnectDevices(): Promise<{ usb: boolean; hdmi: boolean }> {
+    const [usbDisconnected, hdmiDisconnected] = await Promise.all([
+      this.usbService.disconnect(),
+      this.hdmiService.disconnect()
+    ]);
+    
+    return { usb: usbDisconnected, hdmi: hdmiDisconnected };
+  }
+
+  async transferData(data: string): Promise<boolean> {
+    try {
+      // Get data from USB
+      const usbData = await this.usbService.sendData(data);
+      
+      // Convert USB data format to HDMI format (adapter pattern)
+      const hdmiCompatibleData = this.convertToHDMIFormat(usbData);
+      
+      // Send to HDMI display
+      return await this.hdmiService.displayData(hdmiCompatibleData);
+    } catch (error) {
+      logger.error('Data transfer failed', { error });
+      throw new Error('Failed to transfer data between devices');
+    }
+  }
+
+  async getDeviceStatus(): Promise<{
+    usb: { connected: boolean };
+    hdmi: { connected: boolean; resolution?: string; refresh?: number };
+  }> {
+    const hdmiConnected = this.hdmiService.isConnected();
+    let hdmiStatus: any = { connected: hdmiConnected };
+    
+    if (hdmiConnected) {
+      const displayStatus = await this.hdmiService.getDisplayStatus();
+      hdmiStatus = { ...hdmiStatus, ...displayStatus };
+    }
+    
+    return {
+      usb: { connected: this.usbService.isConnected() },
+      hdmi: hdmiStatus
+    };
+  }
+
+  private convertToHDMIFormat(usbData: string): string {
+    // Convert USB data format to HDMI format
+    return `[HDMI_FORMAT]${usbData}`;
+  }
+}
+
+// src/lib/logger.ts
+type LogLevel = 'info' | 'warn' | 'error' | 'debug';
+
+class Logger {
+  info(message: string, meta?: Record<string, any>) {
+    this.log('info', message, meta);
+  }
+  
+  warn(message: string, meta?: Record<string, any>) {
+    this.log('warn', message, meta);
+  }
+  
+  error(message: string, meta?: Record<string, any>) {
+    this.log('error', message, meta);
+  }
+  
+  debug(message: string, meta?: Record<string, any>) {
+    this.log('debug', message, meta);
+  }
+  
+  private log(level: LogLevel, message: string, meta?: Record<string, any>) {
+    // In production, you might use a more sophisticated logging solution
+    console.log(`[${level.toUpperCase()}] ${message}`, meta || '');
+  }
+}
+
+export const logger = new Logger();
+
+// Usage in a Next.js API route (pages/api/devices/index.ts)
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { DeviceAdapterService } from '@/lib/adapters/device-adapter.service';
+
+type DeviceResponse = {
+  success: boolean;
+  data?: any;
+  error?: string;
+};
+
+// Create a singleton instance
+let deviceAdapter: DeviceAdapterService | null = null;
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<DeviceResponse>
+) {
+  // Initialize the adapter if not already done
+  if (!deviceAdapter) {
+    deviceAdapter = new DeviceAdapterService();
+  }
+  
+  try {
+    switch (req.method) {
+      case 'POST':
+        if (req.query.action === 'connect') {
+          const result = await deviceAdapter.initializeDevices();
+          return res.status(200).json({ success: true, data: result });
+        } else if (req.query.action === 'transfer') {
+          const { data } = req.body;
+          if (!data) {
+            return res.status(400).json({ success: false, error: 'Missing data payload' });
+          }
+          const result = await deviceAdapter.transferData(data);
+          return res.status(200).json({ success: true, data: result });
+        }
+        return res.status(400).json({ success: false, error: 'Invalid action' });
+        
+      case 'GET':
+        if (req.query.action === 'status') {
+          const status = await deviceAdapter.getDeviceStatus();
+          return res.status(200).json({ success: true, data: status });
+        }
+        return res.status(400).json({ success: false, error: 'Invalid action' });
+        
+      case 'DELETE':
+        if (req.query.action === 'disconnect') {
+          const result = await deviceAdapter.disconnectDevices();
+          return res.status(200).json({ success: true, data: result });
+        }
+        return res.status(400).json({ success: false, error: 'Invalid action' });
+        
+      default:
+        return res.status(405).json({ success: false, error: 'Method not allowed' });
+    }
+  } catch (error) {
+    return res.status(500).json({ 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    });
+  }
+}
