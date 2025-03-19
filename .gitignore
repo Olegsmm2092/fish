@@ -23,6 +23,17 @@ AdapterPattern/vite.config.ts.*
 AdapterPattern/.replit
 AdapterPattern/.breakpoints
 
+# Algorithm
+algorithm/MinMaxPairWebSocketGrokPrototypeToClaude/node_modules/
+algorithm/MinMaxPairClaude/node_modules/
+algorithm/MinMaxPairFinderReplItToImageToClaude/node_modules/
+server/public
+vite.config.ts.*
+*.tar.gz
+
+
+
+
 # backUp of main arh before merged with abc model
 arh.rar
 *.rar
@@ -30,6 +41,7 @@ webSocket.rar
 
 # Node Modules
 webSocket/server/node_modules/
+*/node_modules/*
 
 # Package Lock Files
 webSocket/server/package-lock.json

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Array Pair Finder</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Array Pair Finder</h1>
+    <p class="subtitle">Find pairs with minimum and maximum differences in an array</p>
+
+    <div class="input-container">
+      <h2>Input Array</h2>
+      <div class="input-field">
+        <input type="text" id="arrayInput" placeholder="e.g., 3,1,4,2,7,5" 
+               aria-label="Enter comma-separated integers">
+        <button id="findPairsBtn">Find Pairs</button>
+      </div>
+      <p class="help-text">Array must contain 3-100,000 integers between 1-100,000</p>
+    </div>
+
+    <div class="results-container">
+      <h2>Results</h2>
+      <p id="lastUpdated">Last updated: Never</p>
+      
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>TYPE</th>
+            <th>INDICES (1-BASED)</th>
+            <th>VALUES</th>
+            <th>DIFFERENCE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="min-row">
+            <td>Min Difference</td>
+            <td id="minIndices">-</td>
+            <td id="minValues">-</td>
+            <td id="minDifference">-</td>
+          </tr>
+          <tr class="max-row">
+            <td>Max Difference</td>
+            <td id="maxIndices">-</td>
+            <td id="maxValues">-</td>
+            <td id="maxDifference">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-container">
+      <h2>How It Works</h2>
+      <p>This tool finds pairs of elements in your array where:</p>
+      <ul>
+        <li>The <strong>minimum difference</strong> between array[i] - array[j] is found (where j > i)</li>
+        <li>The <strong>maximum difference</strong> between array[i] - array[j] is found (where j > i)</li>
+        <li>If multiple pairs exist with the same difference, the pair with the smallest indices is chosen</li>
+      </ul>
+      <p>All indices are reported using 1-based indexing for readability.</p>
+    </div>
+
+    <div id="notification" class="notification hidden"></div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

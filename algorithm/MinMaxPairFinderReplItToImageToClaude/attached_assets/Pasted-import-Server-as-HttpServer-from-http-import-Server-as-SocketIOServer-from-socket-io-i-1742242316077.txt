@@ -1,0 +1,173 @@
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { NextApiRequest, NextApiResponse } from 'next';
+
+interface ArrayData {
+  type: string;
+  array: number[];
+}
+
+interface PairResult {
+  min: number[];
+  max: number[];
+}
+
+interface ClientMessage {
+  type: string;
+  array?: number[];
+}
+
+interface ServerMessage {
+  type: string;
+  result?: PairResult;
+  error?: string;
+}
+
+// Socket.io instance
+let io: SocketIOServer;
+
+// Compute the pair with minimum difference
+function computeMinPair(arr: number[]): [number, number] {
+  const n = arr.length;
+  const minLeft: Array<{ value: number; index: number }> = new Array(n);
+  minLeft[0] = { value: arr[0], index: 0 };
+  
+  for (let j = 1; j < n; j++) {
+    if (arr[j] < minLeft[j-1].value) {
+      minLeft[j] = { value: arr[j], index: j };
+    } else {
+      minLeft[j] = minLeft[j-1];
+    }
+  }
+
+  let minDiff = Infinity;
+  let bestI = -1, bestJ = -1;
+  
+  for (let j = 1; j < n; j++) {
+    const iInfo = minLeft[j-1];
+    const currentDiff = arr[j] - iInfo.value; // Note: flipped the subtraction order to find min positive difference
+    
+    if (currentDiff > 0 && currentDiff < minDiff) {
+      minDiff = currentDiff;
+      bestI = iInfo.index;
+      bestJ = j;
+    } else if (currentDiff === minDiff) {
+      if (iInfo.index < bestI || (iInfo.index === bestI && j < bestJ)) {
+        bestI = iInfo.index;
+        bestJ = j;
+      }
+    }
+  }
+  
+  return [bestI, bestJ];
+}
+
+// Compute the pair with maximum difference
+function computeMaxPair(arr: number[]): [number, number] {
+  const n = arr.length;
+  const minRight: Array<{ value: number; index: number }> = new Array(n);
+  minRight[n-1] = { value: arr[n-1], index: n-1 };
+  
+  for (let i = n-2; i >= 0; i--) {
+    if (arr[i] <= minRight[i+1].value) {
+      minRight[i] = { value: arr[i], index: i };
+    } else {
+      minRight[i] = minRight[i+1];
+    }
+  }
+
+  let maxDiff = -Infinity;
+  let bestI = -1, bestJ = -1;
+  
+  for (let i = 0; i < n-1; i++) {
+    const jInfo = minRight[i+1];
+    const currentDiff = arr[i] - jInfo.value;
+    
+    if (currentDiff > maxDiff) {
+      maxDiff = currentDiff;
+      bestI = i;
+      bestJ = jInfo.index;
+    } else if (currentDiff === maxDiff) {
+      if (i < bestI || (i === bestI && jInfo.index < bestJ)) {
+        bestI = i;
+        bestJ = jInfo.index;
+      }
+    }
+  }
+  
+  return [bestI, bestJ];
+}
+
+const SocketHandler = (req: NextApiRequest, res: NextApiResponse) => {
+  if (!res.socket) {
+    res.status(500).end();
+    return;
+  }
+  
+  const httpServer = res.socket.server as any;
+  
+  // If the socket.io server is already initialized, we're done
+  if (httpServer.io) {
+    res.end();
+    return;
+  }
+
+  // Initialize the socket.io server
+  io = new SocketIOServer(httpServer, {
+    path: '/api/socket',
+    addTrailingSlash: false,
+  });
+  
+  httpServer.io = io;
+
+  io.on('connection', (socket) => {
+    console.log('Client connected:', socket.id);
+    
+    socket.on('array', (data: ArrayData) => {
+      try {
+        const arr = data.array;
+        
+        // Input validation
+        if (!Array.isArray(arr)) {
+          socket.emit('error', { error: 'Input must be an array' });
+          return;
+        }
+        
+        if (arr.length < 3 || arr.length > 1e5) {
+          socket.emit('error', { error: 'Array length must be between 3 and 100000' });
+          return;
+        }
+        
+        for (const num of arr) {
+          if (!Number.isInteger(num) || num < 1 || num > 1e5) {
+            socket.emit('error', { error: `Invalid element: ${num}. Must be an integer between 1 and 100000` });
+            return;
+          }
+        }
+        
+        // Calculate index pairs
+        const minPair = computeMinPair(arr);
+        const maxPair = computeMaxPair(arr);
+        
+        const result: PairResult = {
+          min: [minPair[0] + 1, minPair[1] + 1],
+          max: [maxPair[0] + 1, maxPair[1] + 1]
+        };
+        
+        // Broadcast result to all clients
+        io.emit('update', { type: 'update', result });
+      } catch (error) {
+        console.error('Error:', error);
+        socket.emit('error', { error: 'Invalid message format' });
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected:', socket.id);
+    });
+  });
+
+  res.end();
+};
+
+export default SocketHandler;

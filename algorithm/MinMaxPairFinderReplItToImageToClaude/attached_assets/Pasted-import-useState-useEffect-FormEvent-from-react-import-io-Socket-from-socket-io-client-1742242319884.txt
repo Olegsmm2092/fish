@@ -1,0 +1,136 @@
+import { useState, useEffect, FormEvent } from 'react';
+import { io, Socket } from 'socket.io-client';
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+
+interface PairResult {
+  min: number[];
+  max: number[];
+}
+
+interface ServerMessage {
+  type: string;
+  result?: PairResult;
+  error?: string;
+}
+
+export default function Home() {
+  const [arrayInput, setArrayInput] = useState<string>('');
+  const [minPair, setMinPair] = useState<string>('-');
+  const [maxPair, setMaxPair] = useState<string>('-');
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
+
+  useEffect(() => {
+    // Initialize socket connection
+    const socketInitializer = async () => {
+      // Ensure the socket API route is called to initialize the server
+      await fetch('/api/socket');
+      
+      const newSocket = io({
+        path: '/api/socket',
+      });
+
+      newSocket.on('connect', () => {
+        console.log('Connected to server');
+        setIsConnected(true);
+      });
+
+      newSocket.on('disconnect', () => {
+        console.log('Disconnected from server');
+        setIsConnected(false);
+      });
+
+      newSocket.on('update', (data: ServerMessage) => {
+        if (data.result) {
+          setMinPair(data.result.min.join(' '));
+          setMaxPair(data.result.max.join(' '));
+        }
+      });
+
+      newSocket.on('error', (data: ServerMessage) => {
+        if (data.error) {
+          alert(`Error: ${data.error}`);
+        }
+      });
+
+      setSocket(newSocket);
+    };
+
+    socketInitializer();
+
+    // Cleanup function to disconnect socket when component unmounts
+    return () => {
+      if (socket) {
+        socket.disconnect();
+      }
+    };
+  }, []);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    
+    if (!socket) {
+      alert('Socket connection not established');
+      return;
+    }
+
+    try {
+      const arr = arrayInput.split(',').map(num => parseInt(num.trim(), 10));
+      
+      if (arr.some(isNaN)) {
+        alert('Please enter valid integers separated by commas.');
+        return;
+      }
+      
+      socket.emit('array', { type: 'array', array: arr });
+    } catch (error) {
+      console.error('Error processing input:', error);
+      alert('An error occurred while processing your input');
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>Real-Time Array Pairs</title>
+        <meta name="description" content="Find min and max pairs in arrays" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className={styles.main}>
+        <h1 className={styles.title}>Find Min & Max Pairs</h1>
+        
+        <div className={styles.status}>
+          {isConnected ? 
+            <span className={styles.connected}>Connected</span> : 
+            <span className={styles.disconnected}>Disconnected</span>
+          }
+        </div>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            type="text"
+            value={arrayInput}
+            onChange={(e) => setArrayInput(e.target.value)}
+            placeholder="Enter numbers, e.g., 3,1,4,2"
+            className={styles.input}
+            required
+          />
+          <button 
+            type="submit" 
+            className={styles.button}
+            disabled={!isConnected}
+          >
+            Submit
+          </button>
+        </form>
+
+        <div className={styles.result}>
+          <p>Minimum Difference Pair: <span id="minPair">{minPair}</span></p>
+          <p>Maximum Difference Pair: <span id="maxPair">{maxPair}</span></p>
+        </div>
+      </main>
+    </div>
+  );
+}

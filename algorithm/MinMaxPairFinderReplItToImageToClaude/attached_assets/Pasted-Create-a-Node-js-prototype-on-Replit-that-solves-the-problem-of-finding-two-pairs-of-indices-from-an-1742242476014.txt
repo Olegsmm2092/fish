@@ -1,0 +1,46 @@
+Create a Node.js prototype on Replit that solves the problem of finding two pairs of indices from an array—one with the minimum difference and one with the maximum difference—while updating all connected browser tabs in real-time using WebSockets. Follow these steps to build and run the prototype:
+
+1. **Set Up the Project**:
+   - Initialize a new Node.js project on Replit.
+   - Install required dependencies: `npm install express ws`.
+
+2. **Create Server File (`server.js`)**:
+   - Set up an Express server to serve static files and handle HTTP requests.
+   - Integrate a WebSocket server using the `ws` library to manage real-time communication.
+   - Define an initial array (e.g., `[2, 1, 3, 5, 2, 4]`) with its length `n`.
+   - Implement a function to calculate min/max difference pairs:
+     - Validate input: ensure 3 ≤ n ≤ 10⁵ and elements are integers between 1 and 10⁵.
+     - Create an indexed array (value, 1-based index pairs) and sort by value.
+     - Find the minimum difference by checking adjacent elements in the sorted array.
+     - Find the maximum difference by comparing all pairs in the sorted array.
+     - For both pairs, enforce i < j and apply tie-breaking: smallest i, then smallest j if differences are equal.
+     - Return the pairs as an object with `minPair` and `maxPair`.
+   - Add WebSocket logic:
+     - On client connection, send the current pairs.
+     - Listen for array updates from clients, recalculate pairs, and broadcast to all connected clients.
+
+3. **Create Client File (`public/index.html`)**:
+   - In a `public` folder, create an HTML file with:
+     - A title (e.g., "Real-Time Min/Max Pairs").
+     - Display elements for the min pair and max pair (e.g., `<span>` tags).
+     - An input field and button for users to submit a new array (comma-separated numbers).
+   - Add JavaScript:
+     - Establish a WebSocket connection to the server (`ws://<replit-url>`).
+     - On receiving messages, update the displayed pairs.
+     - On button click, parse the input into an array and send it to the server via WebSocket.
+
+4. **Configure File Serving**:
+   - Use Express to serve the `public` folder as static content.
+
+5. **Run and Test**:
+   - Start the server with `node server.js`.
+   - Open the Replit web preview and duplicate it in multiple tabs.
+   - Test by entering a new array (e.g., "2,1,3,5,2,4") in one tab and verifying that all tabs update instantly with the correct pairs (e.g., "2 4" for min, "4 5" for max).
+
+6. **Ensure Requirements Are Met**:
+   - Efficiently calculate pairs using sorting for the minimum difference.
+   - Maintain real-time updates across tabs without refresh.
+   - Keep the interface simple and functional.
+   - Validate inputs and handle edge cases (e.g., invalid n or values).
+
+This prototype should demonstrate real-time synchronization of min/max difference pairs across browser tabs, fulfilling the task’s core requirements.
