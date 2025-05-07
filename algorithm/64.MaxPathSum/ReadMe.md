@@ -1,6 +1,6 @@
 # 🟦 Matrix Path Sum Visualizer
 
-A visual tool inspired by [LeetCode #64](https://leetcode.com/problems/minimum-path-sum/), but modified to calculate the **Maximum Path Sum** instead of the minimum.
+A visual tool inspired by [LeetCode #64](https://leetcode.com/problems/minimum-path-sum/description/), but modified to calculate the **Maximum Path Sum** instead of the minimum.
 
 ## ✨ Features
 
@@ -98,6 +98,6 @@ for each cell (i, j):
 
 👉 **Do you want to include the full algorithm implementation in the README? Or more backend setup instructions too?**
 
-Let me know in the issue on the [GitHub repository](https://github.com/your-repo-link).
+Let me know in the issue on the [GitHub repository](https://github.com/Olegsmm2092/fish/tree/master/algorithm/64.MaxPathSum).
 
 
