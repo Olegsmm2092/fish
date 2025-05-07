@@ -1,0 +1,30 @@
+WebSocket Integration:
+
+    Set up a WebSocket server using ws (or similar) in Node.js to handle real-time communication.
+    The client sends a message to the server when the "Next Step" button is clicked.
+    The server responds with the next path coordinate and current sum, which the client uses to update the canvas.
+    Ensure the server maintains the path state and sends updates incrementally.
+
+Project Structure:
+
+    Create a server.ts for the WebSocket server and path computation logic.
+    Create a client.ts for the browser-side logic (Canvas rendering, WebSocket communication).
+    Include an index.html for the web interface.
+    Set up a tsconfig.json for TypeScript compilation.
+    Use npm to install dependencies (ws, typescript, express for serving static files).
+
+Error Handling:
+
+    Handle empty or invalid matrices in the path computation.
+    Ensure WebSocket connection errors are logged and displayed to the user.
+
+User Experience:
+
+    Match the Python/Tkinter GUI’s functionality: a grid showing the path, a sum label, and a button to step through the path.
+    Ensure the canvas is centered in the browser window with a fixed size (300x300 pixels for the 5x5 grid, plus space for the label and button).
+
+Deployment:
+
+    Configure the Replit environment to compile TypeScript and run the Node.js server.
+    Serve the index.html and client-side JavaScript via Express.
+    Ensure the WebSocket server runs on a port compatible with Replit’s hosting.

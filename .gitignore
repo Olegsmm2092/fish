@@ -27,6 +27,11 @@ AdapterPattern/.breakpoints
 algorithm/MinMaxPairWebSocketGrokPrototypeToClaude/node_modules/
 algorithm/MinMaxPairClaude/node_modules/
 algorithm/MinMaxPairFinderReplItToImageToClaude/node_modules/
+algorithm/64.MaxPathSum/node_modules/
+algorithm/64.MaxPathSum/dist
+algorithm/64.MaxPathSum/.DS_Store
+algorithm/64.MaxPathSum/vite.config.ts.*
+algorithm/64.MaxPathSum/server/public
 server/public
 vite.config.ts.*
 *.tar.gz
