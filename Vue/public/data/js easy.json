@@ -1,0 +1,123 @@
+[
+    {
+        "question": "How to insert a comment that has more than one line?",
+        "answer": {
+            "answer_a": "/*This comment has more than one line*/",
+            "answer_b": "<!--This comment has more than one line-->",
+            "answer_c": "//This comment has more than one line//",
+            "answer_d": null,
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "Which operator is used to assign a value to a variable?",
+        "answer": {
+            "answer_a": "x",
+            "answer_b": "-",
+            "answer_c": "=",
+            "answer_d": "*",
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "Where is the correct place to insert a JavaScript?",
+        "answer": {
+            "answer_a": "The <head> section",
+            "answer_b": "The <body> section",
+            "answer_c": "The <footer>",
+            "answer_d": "Both the <head> section and the <body> section are correct",
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "What is the correct JavaScript syntax for opening a new window called \"w2\" ?",
+        "answer": {
+            "answer_a": "w2 = window.new(\"http://www.w3schools.com\");",
+            "answer_b": "w2 = window.open(\"http://www.w3schools.com\");",
+            "answer_c": null,
+            "answer_d": null,
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "How can you optimize the performance of a JavaScript application?",
+        "answer": {
+            "answer_a": "Minifying and bundling scripts",
+            "answer_b": "Using synchronous AJAX requests",
+            "answer_c": "Avoiding caching mechanisms",
+            "answer_d": "Implementing lazy loading for resources",
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "What is the correct syntax for referring to an external script called \"xxx.js\"?",
+        "answer": {
+            "answer_a": "<script name=\"xxx.js\">",
+            "answer_b": "<script src=\"xxx.js\">",
+            "answer_c": "<script href=\"xxx.js\">",
+            "answer_d": "<script declare=\"xxx.js\">",
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "What will the following code return: Boolean(10 > 9)",
+        "answer": {
+            "answer_a": "true",
+            "answer_b": "NaN",
+            "answer_c": "false",
+            "answer_d": null,
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "How do you declare a JavaScript variable?",
+        "answer": {
+            "answer_a": "v carName;",
+            "answer_b": "variable carName;",
+            "answer_c": "var carName;",
+            "answer_d": null,
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "How do you call a function named \"myFunction\"?",
+        "answer": {
+            "answer_a": "myFunction()",
+            "answer_b": "call myFunction()",
+            "answer_c": "call function myFunction()",
+            "answer_d": null,
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    },
+    {
+        "question": "What is the difference between '==' and '===' operators in JavaScript?",
+        "answer": {
+            "answer_a": "Both operators perform type coercion",
+            "answer_b": "'===' performs type coercion while '==' does not",
+            "answer_c": "'==' performs type coercion while '===' does not",
+            "answer_d": "Both operators do not perform type coercion",
+            "answer_e": null,
+            "answer_f": null
+        },
+        "showAnswers": false
+    }
+    
+]

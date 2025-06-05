@@ -36,8 +36,15 @@ server/public
 vite.config.ts.*
 *.tar.gz
 
-
-
+# Vue
+Vue/node_modules
+Vue/dist
+Vue/.DS_Store
+Vue/server/public
+Vue/vite.config.ts.*
+*.tar.gz
+Vue/.replit
+Vue/.breakpoints
 
 # backUp of main arh before merged with abc model
 arh.rar
